@@ -1,0 +1,90 @@
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+
+var particles = [];
+
+canvas.onmousedown = function(e)
+{
+    for (var i = 0; i < 36 * 2; i++)
+    {
+        particles.push({
+            x: e.clientX,
+            y: e.clientY,
+            angle: i * 5,
+            size: 5 + Math.random() * 3,
+            life: 200 + Math.random() * 50
+        });
+    }
+}
+
+canvas.onmouseup = function(){
+}
+
+ function generateNewColor()
+{
+ var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+    return randomColor;
+}
+
+
+
+var delta = 0;
+var last = Date.now();
+
+function animate()
+{
+    delta = Date.now() - last;
+    last = Date.now();
+    for (var i = 0; i < particles.length; i++)
+    {
+        var p = particles[i];
+        p.x += Math.cos(p.angle) * 4 + Math.random() * 2 - Math.random() * 2;
+        p.y += Math.sin(p.angle) * 4 + Math.random() * 2 - Math.random() * 2;
+        p.life -= delta;
+        p.size -= delta / 50;
+        
+        if (p.size <= 0)
+        {
+            p.life = 0;
+        }
+        
+        if (p.life <= 0)
+        {
+            particles.splice(i--, 1);
+            continue;
+        }
+    }
+}
+
+function render()
+{
+    //Color Code Goes Here
+    ctx.fillStyle =  "#333333";
+    for (var i = 0; i < particles.length; i++)
+    {
+        if (Math.random() < 0.1)
+        {
+            continue;
+        }
+        var p = particles[i];
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2, false);
+        ctx.fill();
+    }
+}
+
+window.requestAnimFrame = (function(){
+    return  window.requestAnimationFrame       ||
+        window.webkitRequestAnimationFrame ||
+        window.mozRequestAnimationFrame    ||
+        function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+        };
+})();
+
+(function animloop(){
+    requestAnimFrame(animloop);
+    animate();
+    render();
+})();
