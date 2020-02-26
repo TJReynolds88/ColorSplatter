@@ -21,13 +21,6 @@ canvas.onmousedown = function(e)
 canvas.onmouseup = function(){
 }
 
- function generateNewColor()
-{
- var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
-    return randomColor;
-}
-
-
 
 var delta = 0;
 var last = Date.now();
@@ -60,7 +53,9 @@ function animate()
 function render()
 {
     //Color Code Goes Here
-    ctx.fillStyle =  "#333333";
+    var randomColor = '#'+Math.floor(Math.random()*16777215).toString(16);
+
+    ctx.fillStyle =  randomColor;
     for (var i = 0; i < particles.length; i++)
     {
         if (Math.random() < 0.1)
